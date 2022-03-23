@@ -1,0 +1,67 @@
+
+Making a File System
+
+PART 1:
+    read file system super block and use the info to read the FAT
+
+    ./diskinfo test.img
+
+    Sample Output:
+
+    Super block information:
+    Block size: 512
+    Block count: 5120
+    FAT starts: 1
+    FAT blocks: 40
+    Root directory start: 41
+    Root directory block: 8
+
+    FAT information:
+    Free Blocks: 5071
+    Reserved Blocks: 41
+    Allocated Blocks: 8
+
+Part 2:
+    displays contents of root directory or any sub-directory in file system 
+
+    ./disklist test.img /sub_dir
+
+    First column:
+        F for regular files, D for directories, then a single space
+    Second column:
+        10 characters for file size followed by single space
+    Third column:
+        30 chars for file name followed by single space
+    Fourth column:
+        file creation date (not modification date)
+
+    Sample Output:
+    F      2560      foo.txt  2005/11/15 12:00:00
+    F      5120      foo2.txt 2005/11/15 12:00:00
+
+Part 3:
+    copies file from file system to current directory in linux
+    if file not found in root or given sub-directory output "File not found" and exit
+
+    ./diskget test.img /sub_dir/foo2.txt foo.txt
+
+Part 4:
+    copies file from current linux directory into file system at root or given sub-directory
+    If file not found, output "File not found" and exit
+
+    ./diskput test.img foo.txt /sub_dir/foo3.txt
+
+Part 5: 
+    go through disk image (including super block, FAT, FDT and data blocks)
+    find inconsistent info and fix issues when possible
+    *specifications in assignment pdf*
+
+    output problems that were identified and fixed
+
+    ./diskfix test.img
+
+Specifications:
+    FAT has three components:
+        super block
+        directory structure
+        File Allocation Table, FAT
