@@ -20,7 +20,7 @@ struct __attribute__((__packed__)) superblock_t {
 
 void main(int argc, char* argv[]) {
 
-    int fd = open(argv[1], O_RDWR);
+    int fd = open(argv[1], O_RDWR); //open file
     struct stat buffer;
     int status = fstat(fd, &buffer);
 

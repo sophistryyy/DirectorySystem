@@ -1,6 +1,9 @@
 
 Making a File System
 
+TODO:
+    parse blocks and nicely format and print info
+
 PART 1:
     read file system super block and use the info to read the FAT
 
