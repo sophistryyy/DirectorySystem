@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <time.h>
-#include <arpa/inet.h>
+// #include <arpa/inet.h>
 
 struct __attribute__((__packed__)) superblock_t {
     uint8_t   fs_id [8];  //8 bytes
@@ -18,7 +18,6 @@ struct __attribute__((__packed__)) superblock_t {
     uint32_t root_dir_start_block; //4
     uint32_t root_dir_block_count;  //4
 };
-
 
 
 void main(int argc, char* argv[]) {
@@ -33,7 +32,7 @@ void main(int argc, char* argv[]) {
 
     struct superblock_t* sb;
     sb=(struct superblock_t*)address;
-    printf("block count in struct: %x\n", ntohl(sb->file_system_block_count));
+    printf("block count in struct: %d\n", ntohl(sb->file_system_block_count));
 
     /*int fssize;
     memcpy(&fssize, address+10, 4);

@@ -44,28 +44,44 @@ struct __attribute__((__packed__)) dir_entry_t{
     uint8_t unused[6];
 };
 
-void diskinfo(char* filename){
+int diskinfo(char* filename){
     int fd = open(filename, O_RDWR); //open file
     struct stat buffer;
     int status = fstat(fd, &buffer);
+    // printf("%s\n",buffer.st_size); //gives file size
 
-    //tamplate:   pa=mmap(addr, len, prot, flags, fildes, off);
+    //template:   pa=mmap(addr, len, prot, flags, fildes, off);
     //c will implicitly cast void* to char*, while c++ does NOT
     void* address=mmap(NULL, buffer.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-
     struct superblock_t* sb;
     sb=(struct superblock_t*)address;
-    printf("block count in struct: %x\n", ntohl(sb->file_system_block_count));
 
-    /*int fssize;
-    memcpy(&fssize, address+10, 4);
-    fssize=ntohl(fssize);
-    printf("block count: %x\n",fssize);
-    */
+    //iterate through fat table
+    //start at block fat_start_block, read fat_block_count blocks
 
+    // int fssize;
+    // memcpy(&fssize, address+10, 4);
+    // fssize=ntohl(fssize);
+    // printf("block count: %x\n",fssize);
+    
+    print_diskinfo(sb);
     munmap(address,buffer.st_size);
     close(fd);
-    return;
+    return 0;
+}
+
+void print_diskinfo(struct superblock_t* sb){
+    printf("Super block information:\n");
+    printf("Block size: %d\n", ntohs(sb->block_size));
+    printf("Block count: %d\n", ntohl(sb->file_system_block_count));
+    printf("FAT starts: %d\n", ntohl(sb->fat_start_block));
+    printf("FAT blocks: %d\n", ntohl(sb->fat_block_count));
+    printf("Root directory start: %d\n", ntohl(sb->root_dir_start_block));
+    printf("Root directory blocks: %d\n\n", ntohl(sb->root_dir_block_count));
+    printf("FAT information:\n");
+    printf("Free blocks: d\n");
+    printf("Reserved blocks: d\n");
+    printf("Allocated blocks: d\n");
 }
 
 void disklist(){
@@ -92,7 +108,6 @@ int main(int argc, char* argv[]){
 		fprintf(stderr, "Usage: Can you spare some arguments?\n");
 	} else {
         file = argv[1];
-        printf("%s\n", file);
 	}
 
     //an interesting way to have multiple .o files but only one .c file
